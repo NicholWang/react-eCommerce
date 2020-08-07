@@ -1,7 +1,6 @@
 .header{
   height: 6.5rem;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
-
   .wrap{
     position: relative;
     max-width: 1360px;
@@ -18,6 +17,28 @@
         width: 100%;
         margin: 0;
       }
+    }
+  }
+
+  .callToActions{
+    position: absolute;
+    top: 50%;
+    right: 40px;
+    transform: translateY(-50%);
+    ul,li{
+      margin: 0;
+      padding: 0;
+    }
+    li{
+      list-style-type: none;
+    }
+    a{
+      color: black;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 1.8rem;
+      font-weight: 400;
+      padding: 8px 10px;
     }
   }
 }

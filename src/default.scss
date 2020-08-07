@@ -13,7 +13,8 @@ html,body{
 html,
 body,
 #root,
-.App{
+.App,
+.fullHeight{
   height: 100%;
 }
 body{
@@ -29,13 +30,13 @@ a{
 }
 
 a:hover{
-  transition: all .4s ease-in-out;
+  transition: all .8s ease-in-out;
 }
 
 .main{
   max-width: 1360px;
   width: 100%;
-  height: calc(100% - 6.5rem);
+  height: calc(100% - 6.5rem - 5.8rem);
   padding: 0 50px;
   margin: 0 auto;
 }

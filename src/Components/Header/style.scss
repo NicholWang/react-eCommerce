@@ -31,6 +31,12 @@
     }
     li{
       list-style-type: none;
+      display: inline-block;
+      margin-right: 10px;
+      cursor: pointer;
+      &:last-child{
+        margin-right: 0;
+      }
     }
     a{
       color: black;

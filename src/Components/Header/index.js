@@ -11,7 +11,7 @@ const Header = props => {
     <div className="wrap">
       <div className="logo">
           <Link to="/">
-            <img src={Logo}/>
+            <img src={Logo} alt="Simple Tut"/>
           </Link>
       </div>
 

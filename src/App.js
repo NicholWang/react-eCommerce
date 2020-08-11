@@ -1,12 +1,13 @@
 import React ,{Component} from 'react';
 import {Route,Switch,Redirect} from 'react-router-dom';
 import './default.scss';
-import './Components/Header/index'
-import HomePage from './page/HomePage/index'
+import './Components/Header/index';
+import HomePage from './page/HomePage/index';
 import Registration from './page/Registration';
 import MainLayout from './Layouts/MainLayout';
+import Recovery from './page/Recovery';
 import Login from './page/Login';
-import {auth,handleUserProfile} from './firebase/util'
+import {auth,handleUserProfile} from './firebase/util';
 
 const initialState = {
   currentUser: null
@@ -59,6 +60,9 @@ class App extends Component {
                 (<MainLayout currentUser={currentUser}>
                     <Login/>
                   </MainLayout>)}/>
+              <Route path="/recovery" render={() => (<MainLayout>
+                <Recovery/>
+              </MainLayout>)}/>
           </Switch>
       </div>
     );

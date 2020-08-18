@@ -1,31 +1,14 @@
-import React , {Component} from 'react';
+import React , {useState} from 'react';
 import AuthWrapper from '../AuthWrapper';
 import {withRouter} from 'react-router-dom'
 import {FormInput,Button} from '../forms';
 import {auth} from '../../firebase/util';
 
 
-const initialState = {
-  email: '',
-  error: []
-}
-class EmailPassword extends Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      ...initialState
-    }
-  }
-
-  handleChange = e => {
-    const { name, value} = e.target;
-    this.setState({
-      [name]: value
-    })
-  }
-
-  handleSubmit = async e => {
-    const {email} = this.state;
+const EmailPassword = props => {
+  const [email,setEmail] = useState('');
+  const [error,setError] = useState([]);
+  const handleSubmit = async e => {
     const config = {
       url: 'http://localhost:3000/login'
     };
@@ -34,20 +17,17 @@ class EmailPassword extends Component{
       await auth.sendPasswordResetEmail(email,config)
         .then(() => {
           console.log('Password Reset');
-          this.props.history.push('/login');
+          props.history.push('/login');
         }).catch(() => {
           console.log('Something went wrong');
           const err = ['Email not found. Please try again.'];
-          this.setState({
-            error: err
-          })
+          setError(...err);
         })
     }catch(err){
 
     }
   }
-  render(){
-    const {email,error} = this.state;
+ 
     const configAuthWrapper = {
       headline: 'Email Password'
     }
@@ -67,13 +47,13 @@ class EmailPassword extends Component{
              </ul>
             )
           }
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={handleSubmit}>
             <FormInput
               type="email"
               name="email"
               value={email}
               placeholder="Email"
-              onChange={this.handleChange}
+              onChange={e => setEmail(e.target.value)}
             />
             <Button type="submit">
               Email Password
@@ -83,6 +63,4 @@ class EmailPassword extends Component{
       </AuthWrapper>
     )
   }
-}
-
 export default withRouter(EmailPassword);

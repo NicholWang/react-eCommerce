@@ -1,42 +1,32 @@
-import React , {Component} from 'react';
+import React , {useState} from 'react';
+import {withRouter} from 'react-router-dom';
 import './style.scss';
 import FormInput from '../forms/FormInput';
 import Button from '../forms/Button';
 import {auth,handleUserProfile} from './../../firebase/util';
 import AuthWrapper from '../AuthWrapper';
 
-const initialState = {
-  displayName: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-  errors: []
-}
-class SignUp extends Component{
-  constructor(props) {
-    super(props)
-  
-    this.state = {
-       ...initialState
-    }
-  }
-  handleChange = e => {
-    const {name,value} = e.target;
 
-    this.setState({
-      [name]: value
-    })
-  }
+const SignUp = props => {
+  const [displayName,setDisplayName] = useState('');
+  const [email,setEmail] = useState('');
+  const [password,setPassword] = useState('');
+  const [confirmPassword,setConfirmPassword] = useState('');
+  const [errors,setErrors] = useState([]);
 
-  handleSubmit = async e => {
+  const resetForms = () => {
+    setDisplayName('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setErrors([]);
+  }
+  const handleSubmit = async e => {
     e.preventDefault();
-    const {displayName,email,password,confirmPassword} = this.state;
 
     if(password !== confirmPassword){
       const err = ['Password don\'t match'];
-      this.setState({
-        errors: err
-      })
+      setErrors(...errors,err);
       return;
     }
 
@@ -44,22 +34,19 @@ class SignUp extends Component{
       const {user} = await auth.createUserWithEmailAndPassword(email,password);
       console.log(user);
       await  handleUserProfile(user,{displayName});
-
-      this.setState({
-        ...initialState
-      })
+      resetForms();
+      props.history.push('/');
     }catch(err){
 
     }
   }
-  render(){
-    const {displayName,email,password,confirmPassword,errors} = this.state;
+
     const configAuthWrapper = {
       headline: 'Register'
     }
     return (
       <AuthWrapper {...configAuthWrapper}>
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={handleSubmit}>
           {
             errors.length > 0 && (
               errors.map((error,index) => {
@@ -75,28 +62,28 @@ class SignUp extends Component{
             type="text"
             name="displayName"
             value={displayName}
-            onChange={this.handleChange}
+            onChange={e => setDisplayName(e.target.value)}
             placeholder="Full Name"/>
 
             <FormInput
               type="text"
               name="email"
               value={email}
-              onChange={this.handleChange}
+              onChange={e => setEmail(e.target.value)}
               placeholder="Email"/>
 
             <FormInput
               type="password"
               name="password"
               value={password}
-              onChange={this.handleChange}
+              onChange={e => setPassword(e.target.value)}
               placeholder="Password"/>
 
             <FormInput
               type="password"
               name="confirmPassword"
               value={confirmPassword}
-              onChange={this.handleChange}
+              onChange={e => setConfirmPassword(e.target.value)}
               placeholder="Confirm Password"/>
 
               <Button>
@@ -106,6 +93,5 @@ class SignUp extends Component{
         </AuthWrapper>
     )
   }
-}
 
-export default SignUp;
+export default withRouter(SignUp);

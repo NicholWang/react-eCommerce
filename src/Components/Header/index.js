@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 import './style.scss';
 import Logo from '../../assets/logo.png';
 import {auth} from './../../firebase/util';
@@ -19,6 +20,9 @@ const Header = props => {
         {
           currentUser && (
             <ul>
+              <li key={4}>
+                <Link to="/dashboard">My Account</Link>
+              </li>
               <li key={3} onClick={() => auth.signOut()}>
                 <span>LogOut</span>
               </li>
@@ -45,4 +49,8 @@ const Header = props => {
 
 Header.currentUser = null;
 
-export default Header;
+const mapStateToProps = ({user}) => ({
+  currentUser: user.currentUser
+})
+
+export default connect(mapStateToProps,null)(Header);

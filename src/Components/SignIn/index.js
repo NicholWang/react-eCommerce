@@ -1,14 +1,19 @@
-import React , {useState} from 'react'
+import React , {useState, useEffect} from 'react'
 import {Link,withRouter} from 'react-router-dom'
+import {useDispatch,useSelector} from 'react-redux'
 import './style.scss'
 import Button from '../forms/Button'
-import { signInWithGoogle, auth } from './../../firebase/util'
 import FormInput from '../forms/FormInput'
 import AuthWrapper from '../AuthWrapper'
+import {signInUser,signInWithGoogle,resetAllAuthForms} from '../../redux/User/user.actions'
 
 
-
+const mapState = ({user}) => ({
+  signInSuccess: user.signInSuccess
+})
 const SignIn = props => {
+  const {signInSuccess} = useSelector(mapState);
+  const dispatch = useDispatch();
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
 
@@ -16,20 +21,24 @@ const SignIn = props => {
     setEmail('');
     setPassword('');
   }
-  const handleSubmit = async e => {
-    e.preventDefault();
-    try{
-      console.log(email,password)
-      await auth.signInWithEmailAndPassword(email,password);
-      resetForms();
-      props.history.push('/');
-    }catch(err){
 
+  useEffect(() => {
+    if(signInSuccess){
+      resetForms();
+      dispatch(resetAllAuthForms());
+      props.history.push('/');
     }
+  },[signInSuccess])
+  const handleSubmit =  e => {
+    e.preventDefault();
+    dispatch(signInUser({email,password}))
   }
-    const configAuthWrapper = {
-      headline: 'LogIn'
-    }
+  const handleGoggleSign = () => {
+    dispatch(signInWithGoogle())
+  }
+  const configAuthWrapper = {
+    headline: 'LogIn'
+  }
     return (
       <AuthWrapper {...configAuthWrapper}>
           <div className="formWrap">
@@ -51,7 +60,7 @@ const SignIn = props => {
               </Button>
               <div className="socialSignin">
                 <div className="row">
-                  <Button onClick={signInWithGoogle}>
+                  <Button onClick={handleGoggleSign}>
                     Sign in with Google
                   </Button>
                 </div>

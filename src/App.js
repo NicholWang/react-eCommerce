@@ -1,6 +1,6 @@
 import React ,{useEffect} from 'react';
-import {Route,Switch,Redirect} from 'react-router-dom';
-import {connect} from 'react-redux';
+import {Route,Switch} from 'react-router-dom';
+import {useDispatch} from 'react-redux';
 import './default.scss';
 import './Components/Header/index';
 import HomePage from './page/HomePage/index';
@@ -15,19 +15,19 @@ import WithAuth from './HOC/withAuth'
 
 
 const App = props => {
-  const {setCurrentUser, currentUser} = props;
+  const dispatch = useDispatch();
   useEffect(() => {
     const authListener = auth.onAuthStateChanged(async userAuth => {
      const userRef = await handleUserProfile(userAuth);
      if(userRef){
        userRef.onSnapshot(snapShot => {
-         setCurrentUser({
-             id: snapShot.id,
-             ...snapShot.data()
-           })
+        dispatch( setCurrentUser({
+          id: snapShot.id,
+          ...snapShot.data()
+        }))
        })
      }
-     setCurrentUser(userAuth)
+     dispatch(setCurrentUser(userAuth))
      return () => {
        authListener();
      }
@@ -63,10 +63,4 @@ const App = props => {
     );
   }
 
-
-const mapStateToProps = ({user}) => ({currentUser: user.currentUser})
-
-const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
-})
-export default connect(mapStateToProps,mapDispatchToProps)(App);
+export default App;
